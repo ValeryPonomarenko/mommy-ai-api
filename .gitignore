@@ -1,0 +1,16 @@
+
+.vscode/
+
+__debug_*
+
+docker-compose.yml
+
+.DS_Store
+
+clientLibraryConfig-eclara-aws-provider.json
+
+caddy/
+
+swagger/build_test_env.sh
+
+swagger/test_env_eclara.yaml

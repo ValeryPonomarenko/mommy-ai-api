@@ -1,0 +1,30 @@
+@startuml chat-sequence
+!theme plain
+title Chat flow: User → API → Yandex LLM
+
+actor User
+participant "Frontend\n(mommy-ai)" as FE
+participant "Mommy AI API\n(Go/Gin)" as API
+participant "Yandex Cloud AI\n/v1/responses" as Yandex
+
+User -> FE: Types message, sends
+FE -> FE: Build messages[] (history + new)
+
+FE -> API: POST /api/chat\n{ "messages": [{ role, content }, ...] }
+note right of API: CORS allowed
+
+API -> API: Format messages as\n"User: ...\nAssistant: ..."
+API -> API: Build request:\n{ prompt: { id }, input }
+
+API -> Yandex: POST /v1/responses\nAuthorization: Api-Key\nOpenAI-Project: folderId\nBody: { prompt, input }
+
+Yandex -> Yandex: Run prompt (e.g. obstetrician agent)\n+ file_search / knowledge
+
+Yandex --> API: 200 { output: [{ content: [{ type: "output_text", text }] }] }
+API -> API: Extract output_text from response
+API --> FE: 200 { "reply": "..." }
+
+FE -> FE: Render reply as Markdown\n(ReactMarkdown + remark-gfm)
+FE --> User: Show assistant message in chat
+
+@enduml
