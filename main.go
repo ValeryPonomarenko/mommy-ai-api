@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"mommy-ai-api/auth"
 	"mommy-ai-api/chat"
