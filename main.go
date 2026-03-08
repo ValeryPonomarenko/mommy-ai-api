@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"mommy-ai-api/handlers"
 	"mommy-ai-api/llm"
@@ -11,8 +12,10 @@ import (
 )
 
 func main() {
+	apiKey := os.Getenv("YANDEX_API_KEY") //Insert your API key here
+
 	cfg := llm.Config{
-		APIKey:   "INSERT_YOUR_API_KEY_HERE",
+		APIKey:   apiKey,
 		BaseURL:  "https://ai.api.cloud.yandex.net/v1",
 		Project:  "b1gectqd6v1vksue8oi4",
 		PromptID: "fvtch4g1pmhosuh3r2cu",
