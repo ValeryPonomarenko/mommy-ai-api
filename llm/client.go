@@ -81,11 +81,15 @@ type ChatMessage struct {
 // Chat sends the conversation to the model. The full message history is
 // formatted into a single input string (User: ... / Assistant: ...) so the
 // prompt receives context; the last message should be from the user.
-func (c *Client) Chat(ctx context.Context, messages []ChatMessage) (string, error) {
+// If context is non-empty, it is prepended so the model knows what the user is asking about (e.g. calendar event or analysis).
+func (c *Client) Chat(ctx context.Context, messages []ChatMessage, context string) (string, error) {
 	if len(messages) == 0 {
 		return "", fmt.Errorf("llm: at least one message required")
 	}
 	input := formatMessagesAsInput(messages)
+	if context != "" {
+		input = "Контекст (о чём спрашивает пользователь): " + context + "\n\n" + input
+	}
 
 	reqBody := responseRequest{
 		Prompt: prompt{ID: c.promptID},
